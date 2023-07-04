@@ -1,0 +1,24 @@
+---
+# tasks file for sssd_ldap
+- name: Install SSSD and LDAP-uttils
+  ansible.builtin.apt:
+    name: 
+      - sssd
+      - sssd-tools
+      - ldap-utils
+    update_cache: true
+    state: present
+  become: true
+
+- name: Copy file /etc/sssd/sssd.conf
+  ansible.builtin.copy:
+    mode: 0600
+    src: sssd.conf
+    dest: /etc/sssd/sssd.conf
+  become: true
+
+- name: SSSD deamon start
+  ansible.builtin.systemd:
+    name: sssd.service
+    state: started
+  become: true
