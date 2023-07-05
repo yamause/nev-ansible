@@ -2,9 +2,9 @@
 - name: Converge
   hosts: all
   tasks:
-    - name: "systemctl and sudo install"
+    - name: "Install systemctl sudo openssh-server"
       ansible.builtin.apt:
-        name: 
+        name:
           - systemctl
           - sudo
           - openssh-server
@@ -13,9 +13,10 @@
 
     - name: Create /var/run/sshd
       ansible.builtin.file:
+        mode: "0755"
         path: /var/run/sshd
         state: directory
 
     - name: "Include neverneband.sshd_ldap"
-      include_role:
+      ansible.builtin.include_role:
         name: "neverneband.sshd_ldap"

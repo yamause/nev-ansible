@@ -2,14 +2,14 @@
 - name: Converge
   hosts: all
   tasks:
-    - name: "systemctl and sudo install"
+    - name: "Install systemctl and sudo "
       ansible.builtin.apt:
-        name: 
+        name:
           - systemctl
           - sudo
         update_cache: true
         state: present
 
     - name: "Include neverneband.sssd_ldap"
-      include_role:
+      ansible.builtin.include_role:
         name: "neverneband.sssd_ldap"

@@ -2,11 +2,12 @@
 # tasks file for sshd_ldap
 - name: Copy file /etc/ssh/sshd_config.d/10-sshd-sssd.conf
   ansible.builtin.copy:
+    mode: "0644"
     src: 10-sshd-sssd.conf
     dest: /etc/ssh/sshd_config.d/10-sshd-sssd.conf
   become: true
 
-- name: sshd deamon restart
+- name: Restart sshd deamon
   ansible.builtin.systemd:
     name: ssh.service
     state: restarted

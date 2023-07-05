@@ -1,8 +1,8 @@
 ---
-- name: nev_sv_startup
+- name: Nev_sv_startup
   hosts: nev-sv
   roles:
-  - role: sssd_ldap
-    tags: sssd
-  - role: sshd_ldap"
-    tags: ssh
+    - role: sssd_ldap
+      tags: sssd
+    - role: sshd_ldap
+      tags: ssh
