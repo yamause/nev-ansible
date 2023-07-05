@@ -11,4 +11,7 @@
   ansible.builtin.systemd:
     name: ssh.service
     state: restarted
+    enabled: true
   become: true
+  tags:
+    - molecule-idempotence-notest

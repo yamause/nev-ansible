@@ -5,6 +5,13 @@
   hosts: all
   gather_facts: false
   tasks:
+    - name: Get service status
+      ansible.builtin.systemd:
+        name: sssd.service
+        state: started
+      register: service_status
+      check_mode: true
+
     - name: Example assertion
       ansible.builtin.assert:
-        that: true
+        that: service_status.status.ActiveState == "active"
