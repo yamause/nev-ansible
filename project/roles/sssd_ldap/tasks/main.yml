@@ -16,12 +16,5 @@
     src: sssd.conf
     dest: /etc/sssd/sssd.conf
   become: true
-
-- name: SSSD deamon start
-  ansible.builtin.systemd:
-    name: sssd.service
-    state: restarted
-    enabled: true
-  become: true
-  tags:
-    - molecule-idempotence-notest
+  notify:
+    - Restart SSSD deamon

@@ -6,12 +6,5 @@
     src: 10-sshd-sssd.conf
     dest: /etc/ssh/sshd_config.d/10-sshd-sssd.conf
   become: true
-
-- name: Restart sshd deamon
-  ansible.builtin.systemd:
-    name: ssh.service
-    state: restarted
-    enabled: true
-  become: true
-  tags:
-    - molecule-idempotence-notest
+  notify:
+    - Restart sshd deamon

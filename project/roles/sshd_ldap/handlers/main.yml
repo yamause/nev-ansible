@@ -1,2 +1,10 @@
 ---
 # handlers file for sshd_ldap
+- name: Restart sshd deamon
+  ansible.builtin.systemd:
+    name: ssh.service
+    state: restarted
+    enabled: true
+  become: true
+  tags:
+    - molecule-idempotence-notest

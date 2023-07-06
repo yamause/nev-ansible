@@ -1,2 +1,10 @@
 ---
 # handlers file for sssd_ldap
+- name: Restart SSSD deamon
+  ansible.builtin.systemd:
+    name: sssd.service
+    state: restarted
+    enabled: true
+  become: true
+  tags:
+    - molecule-idempotence-notest
