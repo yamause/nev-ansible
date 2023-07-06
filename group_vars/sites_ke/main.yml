@@ -1,3 +1,0 @@
----
-ansible_become_password: yamakei10
-ansible_user: yamause
