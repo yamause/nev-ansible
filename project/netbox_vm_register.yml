@@ -1,0 +1,5 @@
+---
+- name: Nev_sv_startup
+  hosts: register
+  roles:
+    - role: netbox_vm_register

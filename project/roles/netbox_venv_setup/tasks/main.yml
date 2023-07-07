@@ -1,0 +1,12 @@
+---
+- name: Install virtualenv
+  ansible.builtin.apt:
+    name: virtualenv
+    state: present
+  become: true
+
+- name: Tempolary Python environment
+  ansible.builtin.pip:
+    name:
+      - pynetbox
+    virtualenv: ~/netbox_tmp/venv
