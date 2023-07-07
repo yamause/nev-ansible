@@ -3,59 +3,63 @@
   ansible.builtin.include_role:
     name: netbox_venv_setup
 
-- name: Create virtual machine within NetBox
-  vars:
-    ansible_python_interpreter: ~/netbox_tmp/venv/bin/python
-  netbox.netbox.netbox_virtual_machine:
-    netbox_url: http://nev-ke-co-netbox-01.asaasahi.com
-    netbox_token: ea4562ce173eeefdf002e176663d6e88d8ea020c
-    data:
-      name: "{{ inventory_hostname }}"
-      cluster: "{{ installation_cluster }}"
-      platform: "{{ ansible_distribution }}{{ ansible_distribution_version }}"
-      vcpus: "{{ ansible_processor_cores }}"
-      memory: "{{ ansible_memory_mb.real.total }}"
-      tenant: "neverneband"
-    state: present
+- name: Use block
+  block:
 
-- name: Create interface within NetBox
-  vars:
-    ansible_python_interpreter: ~/netbox_tmp/venv/bin/python
-  netbox.netbox.netbox_vm_interface:
-    netbox_url: http://nev-ke-co-netbox-01.asaasahi.com
-    netbox_token: ea4562ce173eeefdf002e176663d6e88d8ea020c
-    data:
-      virtual_machine: "{{ inventory_hostname }}"
-      name: "{{ ansible_default_ipv4.interface }}"
-    state: present
+    - name: Create virtual machine within NetBox
+      vars:
+        ansible_python_interpreter: "{{ python_path }}"
+      netbox.netbox.netbox_virtual_machine:
+        netbox_url: "{{ netbox_url }}"
+        netbox_token: "{{ netbox_token }}"
+        data:
+          name: "{{ inventory_hostname }}"
+          cluster: "{{ installation_cluster }}"
+          platform: "{{ansible_distribution}}{{ansible_distribution_version}}"
+          vcpus: "{{ ansible_processor_cores }}"
+          memory: "{{ ansible_memory_mb.real.total }}"
+          tenant: "neverneband"
+        state: present
 
-- name: Assign IP address interface within NetBox
-  vars:
-    ansible_python_interpreter: ~/netbox_tmp/venv/bin/python
-  netbox.netbox.netbox_ip_address:
-    netbox_url: http://nev-ke-co-netbox-01.asaasahi.com
-    netbox_token: ea4562ce173eeefdf002e176663d6e88d8ea020c
-    data:
-      address: "{{ ansible_default_ipv4.address }}"
-      dns_name: "{{ inventory_hostname }}"
-      tenant: "neverneband"
-      assigned_object:
-        name: "{{ ansible_default_ipv4.interface }}"
-        virtual_machine: "{{ inventory_hostname }}"
-        # device: 物理筐体はこっち
-    state: present
+    - name: Create interface within NetBox
+      vars:
+        ansible_python_interpreter: "{{ python_path }}"
+      netbox.netbox.netbox_vm_interface:
+        netbox_url: "{{ netbox_url }}"
+        netbox_token: "{{ netbox_token }}"
+        data:
+          virtual_machine: "{{ inventory_hostname }}"
+          name: "{{ ansible_default_ipv4.interface }}"
+        state: present
 
-- name: Assign IP address virtual machine within NetBox
-  vars:
-    ansible_python_interpreter: ~/netbox_tmp/venv/bin/python
-  netbox.netbox.netbox_virtual_machine:
-    netbox_url: http://nev-ke-co-netbox-01.asaasahi.com
-    netbox_token: ea4562ce173eeefdf002e176663d6e88d8ea020c
-    data:
-      name: "{{ inventory_hostname }}"
-      primary_ip4: "{{ ansible_default_ipv4.address }}"
-    state: present
+    - name: Assign IP address interface within NetBox
+      vars:
+        ansible_python_interpreter: "{{ python_path }}"
+      netbox.netbox.netbox_ip_address:
+        netbox_url: "{{ netbox_url }}"
+        netbox_token: "{{ netbox_token }}"
+        data:
+          address: "{{ ansible_default_ipv4.address }}"
+          dns_name: "{{ inventory_hostname }}"
+          tenant: "neverneband"
+          assigned_object:
+            name: "{{ ansible_default_ipv4.interface }}"
+            virtual_machine: "{{ inventory_hostname }}"
+            # device: 物理筐体はこっち
+        state: present
 
-- name: Recursively Tempolary Python environment
-  ansible.builtin.include_role:
-    name: netbox_venv_remove
+    - name: Assign IP address virtual machine within NetBox
+      vars:
+        ansible_python_interpreter: "{{ python_path }}"
+      netbox.netbox.netbox_virtual_machine:
+        netbox_url: "{{ netbox_url }}"
+        netbox_token: "{{ netbox_token }}"
+        data:
+          name: "{{ inventory_hostname }}"
+          primary_ip4: "{{ ansible_default_ipv4.address }}"
+        state: present
+
+  always:
+    - name: Recursively Tempolary Python environment
+      ansible.builtin.include_role:
+        name: netbox_venv_remove

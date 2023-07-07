@@ -2,7 +2,7 @@
 - name: Converge
   hosts: all
   tasks:
-    - name: "Install systemctl and sudo "
+    - name: "Install systemctl and sudo"
       ansible.builtin.apt:
         name:
           - systemctl
