@@ -1,5 +1,0 @@
----
-- name: Recursively Tempolary Python environment
-  ansible.builtin.file:
-    path: ~/netbox_tmp
-    state: absent

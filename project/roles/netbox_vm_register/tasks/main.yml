@@ -1,7 +1,16 @@
 ---
+- name: Install virtualenv
+  ansible.builtin.apt:
+    name: virtualenv
+    state: present
+    update_cache: true
+  become: true
+
 - name: Tempolary Python environment
-  ansible.builtin.include_role:
-    name: netbox_venv_setup
+  ansible.builtin.pip:
+    name:
+      - pynetbox
+    virtualenv: "{{ python_env_path }}venv"
 
 - name: Use block
   block:
@@ -60,6 +69,7 @@
         state: present
 
   always:
-    - name: Recursively Tempolary Python environment
-      ansible.builtin.include_role:
-        name: netbox_venv_remove
+    - name: Remove Tempolary Python environment
+      ansible.builtin.file:
+        path: "{{ python_env_path }}"
+        state: absent
