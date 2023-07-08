@@ -1,5 +1,5 @@
 ---
-- name: Nev_sv_startup
+- name: Register VM within Netbox
   hosts: register
   roles:
     - role: netbox_vm_register

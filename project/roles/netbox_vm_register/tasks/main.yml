@@ -12,12 +12,18 @@
       - pynetbox
     virtualenv: "{{ python_env_path }}venv"
 
-- name: Use block
-  block:
+- name: Vars setup
+  vars:
+    ansible_python_interpreter: "{{ python_path }}"
+    ipv4_address_mask_list:
+      - "{{ ansible_default_ipv4.address }}"
+      - "{{ ansible_default_ipv4.netmask }}"
+    primary_ip4: >
+      "{{ ipv4_address_mask_list | join('/')
+      | ansible.utils.ipaddr('ip/prefix') }}"
 
+  block:
     - name: Create virtual machine within NetBox
-      vars:
-        ansible_python_interpreter: "{{ python_path }}"
       netbox.netbox.netbox_virtual_machine:
         netbox_url: "{{ netbox_url }}"
         netbox_token: "{{ netbox_token }}"
@@ -31,24 +37,23 @@
         state: present
 
     - name: Create interface within NetBox
-      vars:
-        ansible_python_interpreter: "{{ python_path }}"
       netbox.netbox.netbox_vm_interface:
         netbox_url: "{{ netbox_url }}"
         netbox_token: "{{ netbox_token }}"
         data:
           virtual_machine: "{{ inventory_hostname }}"
           name: "{{ ansible_default_ipv4.interface }}"
+          mtu: "{{ ansible_default_ipv4.mtu }}"
+          mac_address: "{{ ansible_default_ipv4.macaddress }}"
         state: present
 
     - name: Assign IP address interface within NetBox
-      vars:
-        ansible_python_interpreter: "{{ python_path }}"
+
       netbox.netbox.netbox_ip_address:
         netbox_url: "{{ netbox_url }}"
         netbox_token: "{{ netbox_token }}"
         data:
-          address: "{{ ansible_default_ipv4.address }}"
+          address: "{{ primary_ip4 }}"
           dns_name: "{{ inventory_hostname }}"
           tenant: "neverneband"
           assigned_object:
@@ -58,14 +63,12 @@
         state: present
 
     - name: Assign IP address virtual machine within NetBox
-      vars:
-        ansible_python_interpreter: "{{ python_path }}"
       netbox.netbox.netbox_virtual_machine:
         netbox_url: "{{ netbox_url }}"
         netbox_token: "{{ netbox_token }}"
         data:
           name: "{{ inventory_hostname }}"
-          primary_ip4: "{{ ansible_default_ipv4.address }}"
+          primary_ip4: "{{ primary_ip4 }}"
         state: present
 
   always:
