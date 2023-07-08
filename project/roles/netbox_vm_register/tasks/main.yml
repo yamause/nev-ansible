@@ -19,8 +19,8 @@
       - "{{ ansible_default_ipv4.address }}"
       - "{{ ansible_default_ipv4.netmask }}"
     primary_ip4: >
-      "{{ ipv4_address_mask_list | join('/')
-      | ansible.utils.ipaddr('ip/prefix') }}"
+      {{ ipv4_address_mask_list | join('/')
+      | ansible.utils.ipaddr('ip/prefix') }}
 
   block:
     - name: Create virtual machine within NetBox
