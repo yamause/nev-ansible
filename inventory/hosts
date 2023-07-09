@@ -1,7 +1,0 @@
-[register]
-nev-ke-sv-container-01.asaasahi.com installation_cluster=nev-ke-sv-pve-01.asaasahi.com
-nev-ke-sv-awx-01.asaasahi.com installation_cluster=nev-ke-sv-pve-01.asaasahi.com
-nev-ke-sv-ldap-01.asaasahi.com installation_cluster=nev-ke-sv-pve-01.asaasahi.com
-nev-ke-sv-nijika-01.asaasahi.com installation_cluster=nev-ke-sv-pve-01.asaasahi.com
-nev-yo-sv-dns-01.asaasahi.com installation_cluster=nev-yo-sv-pve-01.asaasahi.com
-nev-yo-sv-gitlab-01.asaasahi.com installation_cluster=nev-yo-sv-pve-01.asaasahi.com
