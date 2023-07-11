@@ -1,20 +1,6 @@
 ---
-- name: Install virtualenv
-  ansible.builtin.apt:
-    name: virtualenv
-    state: present
-    update_cache: true
-  become: true
-
-- name: Tempolary Python environment
-  ansible.builtin.pip:
-    name:
-      - pynetbox
-    virtualenv: "{{ python_env_path }}venv"
-
 - name: Vars setup
   vars:
-    ansible_python_interpreter: "{{ python_path }}"
     ipv4_address_mask_list:
       - "{{ ansible_default_ipv4.address }}"
       - "{{ ansible_default_ipv4.netmask }}"
@@ -30,11 +16,13 @@
         data:
           name: "{{ inventory_hostname }}"
           cluster: "{{ installation_cluster }}"
-          platform: "{{ansible_distribution}}{{ansible_distribution_version}}"
+          platform:
+            "{{ ansible_distribution }}{{ ansible_distribution_version }}"
           vcpus: "{{ ansible_processor_cores }}"
           memory: "{{ ansible_memory_mb.real.total }}"
           tenant: "neverneband"
         state: present
+      delegate_to: localhost
 
     - name: Create interface within NetBox
       netbox.netbox.netbox_vm_interface:
@@ -46,9 +34,9 @@
           mtu: "{{ ansible_default_ipv4.mtu }}"
           mac_address: "{{ ansible_default_ipv4.macaddress }}"
         state: present
+      delegate_to: localhost
 
     - name: Assign IP address interface within NetBox
-
       netbox.netbox.netbox_ip_address:
         netbox_url: "{{ netbox_url }}"
         netbox_token: "{{ netbox_token }}"
@@ -61,6 +49,7 @@
             virtual_machine: "{{ inventory_hostname }}"
             # device: 物理筐体はこっち
         state: present
+      delegate_to: localhost
 
     - name: Assign IP address virtual machine within NetBox
       netbox.netbox.netbox_virtual_machine:
@@ -70,9 +59,4 @@
           name: "{{ inventory_hostname }}"
           primary_ip4: "{{ primary_ip4 }}"
         state: present
-
-  always:
-    - name: Remove Tempolary Python environment
-      ansible.builtin.file:
-        path: "{{ python_env_path }}"
-        state: absent
+      delegate_to: localhost
