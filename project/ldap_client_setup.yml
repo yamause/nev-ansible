@@ -5,5 +5,3 @@
   roles:
     - role: sssd_ldap
       tags: sssd
-    - role: sshd_ldap
-      tags: ssh

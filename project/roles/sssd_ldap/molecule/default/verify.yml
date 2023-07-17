@@ -1,13 +1,24 @@
 ---
 # This is an example playbook to execute Ansible tests.
 
-- name: Verify
+- name: Verify sssd
   hosts: all
   gather_facts: false
   tasks:
     - name: Get service status
       ansible.builtin.systemd:
         name: sssd.service
+        state: started
+      register: service_status
+      check_mode: true
+
+    - name: Example assertion
+      ansible.builtin.assert:
+        that: service_status.status.ActiveState == "active"
+
+    - name: Get service status
+      ansible.builtin.systemd:
+        name: ssh.service
         state: started
       register: service_status
       check_mode: true
