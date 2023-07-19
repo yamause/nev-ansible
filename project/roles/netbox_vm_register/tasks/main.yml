@@ -41,7 +41,7 @@
         netbox_url: "{{ netbox_url }}"
         netbox_token: "{{ netbox_token }}"
         data:
-          address: "{{ primary_ip4 }}"
+          prefix: "{{ primary_ip4 }}"
           dns_name: "{{ inventory_hostname }}"
           tenant: "neverneband"
           assigned_object:
