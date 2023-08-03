@@ -1,0 +1,8 @@
+---
+# handlers file for sssd_ldap
+- name: Restart prometheus service
+  ansible.builtin.systemd:
+    name: prometheus.service
+    state: restarted
+    enabled: true
+  become: true

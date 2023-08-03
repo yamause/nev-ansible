@@ -1,0 +1,16 @@
+---
+
+- name: Verify sssd
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Get service status
+      ansible.builtin.systemd:
+        name: prometheus.service
+        state: started
+      register: service_status
+      check_mode: true
+
+    - name: Service assertion
+      ansible.builtin.assert:
+        that: service_status.status.ActiveState == "active"

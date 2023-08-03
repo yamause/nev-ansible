@@ -1,0 +1,28 @@
+---
+{# 監視対象を登録するPrometheusホストを識別するタグを取得 #}
+{% set host_tag %}
+{%- for host_service in services -%}
+{%- if host_service.name == "prometheus" -%}
+{{ host_service.tags[0].slug }}
+{%- endif -%}
+{%- endfor -%}
+{% endset %}
+{# ターゲットの列挙 #}
+- targets:
+{% for nb_item in netbox_services %}
+{% if nb_item.value.name == "node-exporter" %}
+{%- for address in nb_item.value.ipaddresses -%}
+{%- for target_service_tag in nb_item.value.tags -%}
+{# ターゲットのタグとPrometheusのタグを比較. 同じであればこのホストに登録 #}
+{% if target_service_tag.slug == host_tag %}
+  - {{
+    query('netbox.netbox.nb_lookup', 'ip-addresses',
+    api_filter='id=' + ( address.id | string ),
+    api_endpoint=netbox_url,
+    token=netbox_token)[0].dns_name
+    }}:{{ nb_item.value.ports[0] }}
+{% endif %}
+{%- endfor -%}
+{%- endfor -%}
+{% endif %}
+{%- endfor -%}

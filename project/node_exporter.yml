@@ -1,0 +1,13 @@
+---
+- name: Install node-exporter
+  hosts: service_node-exporter
+  roles:
+    - role: node_exporter_setup
+      tag: node-exporter
+      notify: Register moniteoing target in Prometheus
+
+- name: Register moniteoing target in Prometheus
+  hosts: service_prometheus
+  roles:
+    - role: prometheus_filesd_update
+      tag: prometheus

@@ -1,0 +1,13 @@
+---
+node_exporter_bin_ver: 1.6.1
+node_exporter_bin_dist: linux-amd64
+node_exporter_bin_file:
+  "node_exporter-{{ node_exporter_bin_ver }}.{{ node_exporter_bin_dist }}"
+node_exporter_bin_dl_url:
+  https://github.com/prometheus/node_exporter/releases/download
+node_exporter_bin_dl_file:
+  "{{ node_exporter_bin_dl_url }}\
+  /v{{ node_exporter_bin_ver }}\
+  /{{ node_exporter_bin_file }}.tar.gz"
+node_exporter_install_path: /usr/local/bin
+node_exporter_listen_address: "0.0.0.0:9100"
