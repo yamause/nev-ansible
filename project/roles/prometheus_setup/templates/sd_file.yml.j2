@@ -1,0 +1,14 @@
+---
+- targets:
+{% for nb_item in netbox_query %}
+{% if nb_item.value.name == "node-exporter" %}
+{% for address in nb_item.value.ipaddresses %}
+  - {{
+    query('netbox.netbox.nb_lookup', 'ip-addresses',
+    api_filter='id=' + ( address.id | string ),
+    api_endpoint=netbox_url,
+    token=netbox_token)[0].dns_name
+    }}:{{ nb_item.value.ports[0] }}
+{% endfor %}
+{% endif %}
+{% endfor %}

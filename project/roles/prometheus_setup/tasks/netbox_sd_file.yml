@@ -1,0 +1,11 @@
+---
+- name: Create file SD for exporter
+  ansible.builtin.template:
+    src: sd_file.yml.j2
+    dest: "{{ prometheus_sd_file_path }}/sd_file.yml"
+    mode: "0644"
+  vars:
+    netbox_query: "{{ query('netbox.netbox.nb_lookup',
+                            'services',
+                            api_endpoint=netbox_url,
+                            token=netbox_token) }}"

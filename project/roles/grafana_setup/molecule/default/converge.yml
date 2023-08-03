@@ -1,0 +1,21 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Install systemctl and sudo"
+      ansible.builtin.apt:
+        name:
+          - systemctl
+          - sudo
+        update_cache: true
+        state: present
+
+    - name: Error permission denied measures
+      ansible.builtin.file:
+        path: /run
+        state: directory
+        mode: "777"
+
+    - name: "Include grafana_setup"
+      ansible.builtin.include_role:
+        name: "grafana_setup"
