@@ -1,0 +1,18 @@
+[Unit]
+Description=Prometheus
+
+[Service]
+Type=simple
+Restart=always
+User=prometheus
+ExecStart={{ prometheus_install_path }}/prometheus \
+--config.file={{ prometheus_config_path }}/prometheus.yml \
+--web.listen-address={{ prometheus_listen_address }} \
+--storage.tsdb.path={{ prometheus_dbdata_path }}
+
+ExecReload=/bin/kill -HUP $MAINPID
+TimeoutStopSec=20s
+SendSIGKILL=no
+
+[Install]
+WantedBy=multi-user.target

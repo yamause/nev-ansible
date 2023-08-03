@@ -1,0 +1,8 @@
+---
+- name: Install Prometheus
+  hosts: service_prometheus
+  roles:
+    - role: prometheus_setup
+      tag: prometheus
+    - role: prometheus_filesd_update
+      tag: prometheus

@@ -1,0 +1,21 @@
+---
+dependency:
+  name: galaxy
+
+driver:
+  name: docker
+
+platforms:
+  - name: instance
+    image: ubuntu:22.04
+    privileged: true
+    pre_build_image: false
+
+provisioner:
+  name: ansible
+  connection_options:
+    prometheus_config_path: /etc/prometheus
+    prometheus_sd_file_path: "{{ prometheus_config_path }}/sd_files"
+
+verifier:
+  name: ansible

@@ -1,0 +1,20 @@
+---
+prometheus_bin_ver: 2.45.0
+prometheus_bin_dist: linux-amd64
+prometheus_bin_file:
+  "prometheus-{{ prometheus_bin_ver }}.{{ prometheus_bin_dist }}"
+prometheus_bin_dl_url:
+  https://github.com/prometheus/prometheus/releases/download
+prometheus_bin_dl_file:
+  "{{ prometheus_bin_dl_url }}\
+  /v{{ prometheus_bin_ver }}\
+  /{{ prometheus_bin_file }}.tar.gz"
+
+prometheus_install_path: /usr/local/bin
+prometheus_config_path: /etc/prometheus
+prometheus_sd_file_path: "{{ prometheus_config_path }}/sd_files"
+prometheus_listen_address: "0.0.0.0:9090"
+prometheus_dbdata_path: /var/prometheus/data
+
+netbox_url: http://nev-ke-co-netbox-01.asaasahi.com
+netbox_token: ea4562ce173eeefdf002e176663d6e88d8ea020c
