@@ -18,6 +18,7 @@
   become: true
   notify:
     - Restart SSSD deamon
+  register: copy_file_sssd_config
 
 - name: Copy file /etc/ssh/sshd_config.d/10-sshd-sssd.conf
   ansible.builtin.copy:
@@ -27,6 +28,30 @@
   become: true
   notify:
     - Restart sshd deamon
+  register: copy_file_sshd_config
+
+- name: Check sssd service
+  ansible.builtin.systemd:
+    name: sssd.service
+  register: service
+
+- name: Restart sssd service
+  ansible.builtin.systemd:
+    name: sssd.service
+    state: restarted
+    daemon_reload: true
+    enabled: true
+  when: service.status.ActiveState != "active"
+  become: true
+
+- name: Restart sshd service
+  ansible.builtin.systemd:
+    name: ssh.service
+    state: restarted
+    daemon_reload: true
+    enabled: true
+  when: service.status.ActiveState != "active"
+  become: true
 
 - name: PAM add mkhomedir
   community.general.pamd:
@@ -39,3 +64,7 @@
     new_control: optional
     new_module_path: pam_mkhomedir.so
   become: true
+
+- name: Include Goss add file role
+  ansible.builtin.include_role:
+    name: goss_add_file

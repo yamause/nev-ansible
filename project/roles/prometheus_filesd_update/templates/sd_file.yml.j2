@@ -10,7 +10,7 @@
 {# ターゲットの列挙 #}
 - targets:
 {% for nb_item in netbox_services %}
-{% if nb_item.value.name == "node-exporter" %}
+{% if nb_item.value.name | regex_findall("node-exporter.*") %}
 {%- for address in nb_item.value.ipaddresses -%}
 {%- for target_service_tag in nb_item.value.tags -%}
 {# ターゲットのタグとPrometheusのタグを比較. 同じであればこのホストに登録 #}

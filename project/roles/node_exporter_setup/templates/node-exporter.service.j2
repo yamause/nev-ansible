@@ -6,7 +6,12 @@ Type=simple
 Restart=always
 User=prometheus
 ExecStart={{ node_exporter_install_path }}/node_exporter \
---web.listen-address={{ node_exporter_listen_address }}
+{% for port in node_exporter_listen_ports %}
+{% for address in node_exporter_listen_addresses %}
+--web.listen-address={{ address }}:{{ port }} 
+{% endfor %}
+{% endfor %}
+
 ExecReload=/bin/kill -HUP $MAINPID
 TimeoutStopSec=20s
 SendSIGKILL=no

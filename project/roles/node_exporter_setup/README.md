@@ -1,38 +1,54 @@
-Role Name
-=========
+# node_exporter_setup
 
-A brief description of the role goes here.
+node-exporterのインストールおよびデーモン化をするよ  
+## 変数
 
-Requirements
-------------
+### `node_exporter_bin_ver: str`
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+インストールするnode-exporterのVersionを指定  
+Default: netbox services custom_field version の値を参照  
 
-Role Variables
---------------
+### `node_exporter_bin_dist: str`
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+インストールするnode-exporterの種類を指定  
+Default: `linux-amd64`  
 
-Dependencies
-------------
+### `node_exporter_bin_file: str`
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+node-exporterバイナリファイル名  
+Default: `node_exporter-{{ node_exporter_bin_ver }}.{{ node_exporter_bin_dist }}`  
 
-Example Playbook
-----------------
+### `node_exporter_bin_dl_url: str`
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+node-exporter Download URL  
+Default: https://github.com/prometheus/node_exporter/releases/download  
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+### `node_exporter_bin_dl_file: str`
 
-License
--------
+node-exporter Install URL  
+Default: `{{ node_exporter_bin_dl_url }}/v{{ node_exporter_bin_ver }}/{{ node_exporter_bin_file }}.tar.gz`  
 
-BSD
+### `node_exporter_install_path: str`
 
-Author Information
-------------------
+node-exporterの実行ファイルを配置するディレクトリ  
+Default: `/usr/local/bin`  
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+### `node_exporter_listen_ports: list`
+
+node-exporterのリッスンポート  
+Default: netbox services port の値を参照  
+
+### `node_exporter_listen_addresses: list`
+
+node-exporterのリッスンアドレス  
+Default: netbox services address の値を参照  
+
+### `goss_dir_path: str`
+
+gossテストシナリオを配置するディレクトリ  
+Default: `/usr/local/share/goss/ansible_auto_create`  
+
+### `goss_file_name: str`
+
+クライアントに配置するgossファイル名  
+Default: `node-exporter.yml`  

@@ -1,0 +1,51 @@
+service:
+    prometheus:
+        enabled: true
+        running: true
+process:
+    prometheus:
+        running: true
+command:
+    prometheus_version:
+        exec: prometheus --version
+        exit-status: 0
+        stdout:
+            - version {{ prometheus_bin_ver }}
+        stderr: []
+        timeout: 0
+user:
+    prometheus:
+        exists: true
+        groups:
+            - prometheus
+        shell: /sbin/nologin
+port:
+{% for listen_port in prometheus_listen_ports %}
+    tcp:{{ listen_port }}:
+        listening: true
+        ip:
+{% for listen_address in prometheus_listen_addresses %}
+          - {{ listen_address }}
+{% endfor %}
+{% endfor %}
+file:
+{% for file in prometheus_binary_files.results %}
+  {{ file.dest }}:
+    exists: true
+    mode: "{{ file.mode }}"
+    size: {{ file.size }}
+    owner: {{ file.owner }}
+    filetype: file
+{% endfor %}
+  {{ prometheus_service_file.dest }}:
+    exists: true
+    mode: "{{ prometheus_service_file.mode }}"
+    size: {{ prometheus_service_file.size }}
+    owner: {{ prometheus_service_file.owner }}
+    filetype: file
+  {{ prometheus_config_file.dest }}:
+    exists: true
+    mode: "{{ prometheus_config_file.mode }}"
+    size: {{ prometheus_config_file.size }}
+    owner: {{ prometheus_config_file.owner }}
+    filetype: file

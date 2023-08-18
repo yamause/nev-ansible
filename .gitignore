@@ -1,3 +1,5 @@
 *venv
 artifacts/*
 env/
+.yamllint
+goss_reports/

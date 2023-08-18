@@ -1,0 +1,39 @@
+package:
+  sssd:
+    installed: true
+
+service:
+  sssd:
+    enabled: true
+    running: true
+
+user:
+  sssd:
+    exists: true
+    groups:
+    - sssd
+    home: /var/lib/sss
+    shell: /usr/sbin/nologin
+
+group:
+  sssd:
+    exists: true
+
+process:
+  sssd:
+    running: true
+
+file:
+  {{ copy_file_sssd_config.dest }}:
+    exists: true
+    mode: "{{ copy_file_sssd_config.mode }}"
+    size: {{ copy_file_sssd_config.size }}
+    owner: {{ copy_file_sssd_config.owner }}
+    filetype: file
+
+  {{ copy_file_sshd_config.dest }}:
+    exists: true
+    mode: "{{ copy_file_sshd_config.mode }}"
+    size: {{ copy_file_sshd_config.size }}
+    owner: {{ copy_file_sshd_config.owner }}
+    filetype: file

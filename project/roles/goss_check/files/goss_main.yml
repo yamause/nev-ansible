@@ -1,0 +1,3 @@
+---
+gossfile:
+  /usr/local/share/goss/ansible_auto_create/*: {}

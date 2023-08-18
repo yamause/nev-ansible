@@ -45,8 +45,11 @@
     owner: prometheus
     group: prometheus
   become: true
+  register: prometheus_sd_file
   vars:
     netbox_services: "{{ query('netbox.netbox.nb_lookup',
-                        'services',
-                        api_endpoint=netbox_url,
-                        token=netbox_token) }}"
+                        'services') }}"
+
+- name: Include Goss add file role
+  ansible.builtin.include_role:
+    name: goss_add_file
