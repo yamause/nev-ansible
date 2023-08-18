@@ -1,0 +1,19 @@
+# [{{ ansible_host }}](https://ohmuroke.com/)
+
+---
+
+|resource-id                |resource-type               |successful                |summary-line                |
+|---------------------------|----------------------------|--------------------------|----------------------------|
+{% for result in data.results %}
+|{{ result["resource-id"] }}|{{ result["resource-type"]}}|{{ result["successful"] }}|{{ result["summary-line"] }}|
+{% endfor %}
+
+|Count              |Failed           |Skipped                |Duration               |
+|---------------------------|----------------------------|--------------------------|----------------------------|
+|{{ data.summary["test-count"] }}|{{ data.summary["failed-count"] }}|{{ data.summary["skipped-count"] }}|{{ '%0.3f' | format(data.summary["total-duration"] / 1000000000) }}s
+
+{% if data.summary["failed-count"] %}
+# *Server Check Failed 😢*
+{% else %}
+# *Server Check Success!!!! 🎉*
+{% endif %}

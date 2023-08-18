@@ -1,38 +1,36 @@
-Role Name
-=========
+# prometheus_filesd_update
 
-A brief description of the role goes here.
+Prometheusのファイルサービスディスカバリのファイルを作成するよ
 
-Requirements
-------------
+## 変数
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+### `prometheus_config_path: str`  
 
-Role Variables
---------------
+Prometheusの設定ファイルのパス  
+Default: `/etc/prometheus`  
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+### `prometheus_sd_file_path: str`
 
-Dependencies
-------------
+ファイルサービスディスカバリの設定ファイルパス  
+Default: `{{ prometheus_config_path }}/sd_files`  
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+### `goss_dir_path: str`
 
-Example Playbook
-----------------
+gossテストシナリオを配置するディレクトリ  
+Default: `/usr/local/share/goss/ansible_auto_create`  
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+### `goss_file_name: str`
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+クライアントに配置するgossファイル名  
+Default: `prometheus_filesd.yml`  
 
-License
--------
+## 環境変数
 
-BSD
+playbookを実行するコントロールノードに設定する必要がある環境変数  
+### `NETBOX_TOKEN: str`
 
-Author Information
-------------------
+netboxのトークン  
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+### `NETBOX_API: str`
+
+netboxのURL  

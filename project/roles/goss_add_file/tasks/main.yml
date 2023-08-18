@@ -1,0 +1,14 @@
+---
+- name: Create goss directory
+  ansible.builtin.file:
+    path: "{{ goss_dir_path }}"
+    state: directory
+    mode: "0755"
+  become: true
+
+- name: Setup goss
+  ansible.builtin.template:
+    src: gossfile.j2
+    dest: "{{ goss_dir_path }}/{{ goss_file_name }}"
+    mode: "0644"
+  become: true

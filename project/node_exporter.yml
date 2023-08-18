@@ -1,6 +1,6 @@
 ---
 - name: Install node-exporter
-  hosts: service_node-exporter
+  hosts: service_node-exporter*
   roles:
     - role: node_exporter_setup
       tag: node-exporter

@@ -1,38 +1,80 @@
-Role Name
-=========
+# prometheus_setup
 
-A brief description of the role goes here.
+prometheusのインストールおよびデーモン化をするよ  
+## 変数
 
-Requirements
-------------
+### `prometheus_bin_ver: str`
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+インストールするprometheusのVersionを指定  
 
-Role Variables
---------------
+Default: netbox services custom_field version の値を参照  
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+### `prometheus_bin_dist: str`
 
-Dependencies
-------------
+インストールするprometheusの種類を指定  
+Default: `linux-amd64`  
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+### `prometheus_bin_file: str`
 
-Example Playbook
-----------------
+prometheusバイナリファイル名  
+Default: `prometheus-{{ prometheus_bin_ver }}.{{ prometheus_bin_dist }}`  
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+### `prometheus_bin_dl_url: str`
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+prometheus Download URL  
+Default: https://github.com/prometheus/prometheus/releases/download  
 
-License
--------
+### `prometheus_bin_dl_file: str`
 
-BSD
+prometheus Install URL  
+Default: `{{ prometheus_bin_dl_url }}/v{{ prometheus_bin_ver }}/{{ prometheus_bin_file }}.tar.gz`  
 
-Author Information
-------------------
+### `prometheus_install_path: str`
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+prometheusの実行ファイルを配置するディレクトリ  
+Default: `/usr/local/bin`  
+
+### `prometheus_listen_ports: list`
+
+prometheusのリッスンポート
+Default: netbox services port の値を参照
+
+### `prometheus_listen_addresses: list`
+
+prometheusのリッスンアドレス  
+Default: netbox services address の値を参照  
+
+### `prometheus_dbdata_path: str`
+
+Prometheusのデータ保存先  
+Default `/var/prometheus/data`  
+
+### `netbox_url: str`
+
+netboxのURL  
+Default: http://nev-ke-co-netbox-01.asaasahi.com  
+
+### `netbox_token: str`
+
+netboxのトークン  
+Default: `ea4562ce173eeefdf002e176663d6e88d8ea020c`  
+
+### `prometheus_config_path: str`  
+
+Prometheusの設定ファイルのパス  
+Default: `/etc/prometheus`  
+
+### `prometheus_sd_file_path: str`
+
+ファイルサービスディスカバリの設定ファイルパス  
+Default: `{{ prometheus_config_path }}/sd_files`  
+
+### `goss_dir_path: str`
+
+gossテストシナリオを配置するディレクトリ  
+Default: `/usr/local/share/goss/ansible_auto_create`  
+
+### `goss_file_name: str`
+
+クライアントに配置するgossファイル名  
+Default: `prometheus.yml`  

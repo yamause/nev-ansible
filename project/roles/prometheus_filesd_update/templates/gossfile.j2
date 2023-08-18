@@ -1,0 +1,7 @@
+file:
+  {{ prometheus_sd_file.dest }}:
+    exists: true
+    mode: "{{ prometheus_sd_file.mode }}"
+    size: {{ prometheus_sd_file.size }}
+    owner: {{ prometheus_sd_file.owner }}
+    filetype: file

@@ -1,0 +1,52 @@
+service:
+  grafana-server:
+    enabled: true
+    running: true
+
+user:
+  grafana:
+    exists: true
+    groups:
+    - grafana
+    home: /usr/share/grafana
+    shell: /bin/false
+
+group:
+  grafana:
+    exists: true
+
+process:
+  grafana:
+    running: true
+
+file:
+{% for file in send_template_files.results %}
+  {{ file.path }}:
+    exists: true
+    mode: "{{ file.mode }}"
+    size: {{ file.size }}
+    owner: {{ file.owner }}
+    filetype: file
+{% endfor %}
+
+package:
+  grafana:
+    installed: true
+{% if install_version %}
+    versions:
+    - {{ install_version }}
+{% endif %}
+
+port:
+{% for service in services %}
+{% if service.name | regex_findall("grafana-server.*") %}
+    {{ service.protocol.value }}:{{ service.ports[0] }}:
+        listening: true
+{% if service.ipaddresses %}
+        ip:
+{% endif %}
+{% for address in service.ipaddresses %}
+            - {{ address.address | ansible.utils.ipaddr('address') }}
+{% endfor %}
+{% endif %}
+{% endfor %}

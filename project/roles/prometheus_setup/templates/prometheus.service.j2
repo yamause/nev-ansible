@@ -7,7 +7,11 @@ Restart=always
 User=prometheus
 ExecStart={{ prometheus_install_path }}/prometheus \
 --config.file={{ prometheus_config_path }}/prometheus.yml \
---web.listen-address={{ prometheus_listen_address }} \
+{% for port in prometheus_listen_ports %}
+{% for address in prometheus_listen_addresses %}
+--web.listen-address={{ address }}:{{ port }} \
+{% endfor %}
+{% endfor %}
 --storage.tsdb.path={{ prometheus_dbdata_path }}
 
 ExecReload=/bin/kill -HUP $MAINPID

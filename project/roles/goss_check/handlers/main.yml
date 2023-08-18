@@ -1,0 +1,15 @@
+---
+- name: Restart prometheus service
+  block:
+
+    - name: Restart service
+      ansible.builtin.systemd:
+        name: prometheus.service
+        state: restarted
+        enabled: true
+      become: true
+      register: service
+
+    - name: Service assertion
+      ansible.builtin.assert:
+        that: service.status.ActiveState == "active"

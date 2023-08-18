@@ -1,5 +1,10 @@
 ---
-node_exporter_bin_ver: 1.6.1
+node_exporter_bin_ver:
+  "{% for service in services %}\
+  {% if service.name | regex_findall('node-exporter.*') %}\
+  {{ service.custom_fields.version }}\
+  {% endif %}\
+  {% endfor %}"
 node_exporter_bin_dist: linux-amd64
 node_exporter_bin_file:
   "node_exporter-{{ node_exporter_bin_ver }}.{{ node_exporter_bin_dist }}"
@@ -10,4 +15,25 @@ node_exporter_bin_dl_file:
   /v{{ node_exporter_bin_ver }}\
   /{{ node_exporter_bin_file }}.tar.gz"
 node_exporter_install_path: /usr/local/bin
-node_exporter_listen_address: "0.0.0.0:9100"
+
+# list
+node_exporter_listen_ports:
+  "{% for service in services %}\
+  {% if service.name | regex_findall('node-exporter.*') %}\
+  {{ service.ports }}\
+  {% endif %}\
+  {% endfor %}"
+
+# list
+node_exporter_listen_addresses:
+  "{% for service in services %}\
+  {% if service.name | regex_findall('node-exporter.*') %}\
+  {{ service.ipaddresses | \
+  map(attribute='address', default='0.0.0.0') | \
+  map('ansible.utils.ipaddr', 'address') | list }}\
+  {% endif %}\
+  {% endfor %}"
+
+# Use in goss_add_file role
+goss_dir_path: /usr/local/share/goss/ansible_auto_create
+goss_file_name: node-exporter.yml

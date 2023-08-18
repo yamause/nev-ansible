@@ -1,15 +1,10 @@
 ---
+
 - name: Restart node_exporter service
-  block:
-
-    - name: Restart service
-      ansible.builtin.systemd:
-        name: node-exporter.service
-        state: restarted
-        enabled: true
-      become: true
-      register: service
-
-    - name: Service assertion
-      ansible.builtin.assert:
-        that: service.status.ActiveState == "active"
+  ansible.builtin.systemd:
+    name: node-exporter.service
+    state: restarted
+    daemon_reload: true
+    enabled: true
+  become: true
+  register: service
