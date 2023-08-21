@@ -13,13 +13,26 @@ source .venv/activate
 pip install -r requirements.txt
 ```
 
+## 変数設定
+
+``` shell
+vim env/extravars
+
+# env/extravars 編集画面
+---
+ansible_user: your_name
+ansible_become_password: your_password
+ansible_ssh_private_key_file: ~/.ssh/your_private.key
+```
+
 ## Playbookの実行
 
 ``` shell
 # ansible-playbookコマンドで実行する場合
 ansible-playbook -i inventory \
 --ask-vault-password \
---extra-vars=@extvars.yml \
+--extra-vars=@extravars.yml \
+--extra-vars=@env/extravars \
 project/playbook.yml
 ```
 
@@ -27,10 +40,13 @@ project/playbook.yml
     - 管理ターゲットのリストファイルを選択  
 - `--ask-vault-password`  
     - 秘密変数を格納した暗号化ファイルを解凍するパスワードを対話モードで入力  
-- `--extra-vars=@extvars.yml`  
+- `--extra-vars=@extravars.yml`  
     - 変数の取り込み. ファイルから取り込む場合, 接頭辞に@をつける.  
 - `project/playbook.yml`  
     - 実行するPlaybookの指定.　適宜書き換え.
+
+共通ユーザでのログイン情報や変数は `extravars.yml` に暗号化した状態で保存している  
+ローカルユーザで実行する場合は `env/extravars` にログイン情報を記述して変数を上書きする  
 
 ## その他有用なコマンド
 
@@ -54,12 +70,12 @@ ansible-inventory -i inventory --host nev-ke-sv-prom-01.asaasahi.com
 
 ## 秘密変数（vault file）
 
-Tokenやログイン情報などの機密情報は `extvars.yml` ファイルに変数を格納し暗号化している  
+Tokenやログイン情報などの機密情報は `extravars.yml` ファイルに変数を格納し暗号化している  
 [`ansible-vault`](https://docs.ansible.com/ansible/latest/cli/ansible-vault.html) コマンドを使って管理する  
 
 ```
 # ファイルの編集
-ansible-vault edit extvars.yml
+ansible-vault edit extravars.yml
 ```
 
 ## 環境変数の準備
