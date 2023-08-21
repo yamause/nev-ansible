@@ -1,0 +1,6 @@
+---
+- name: Terraform use netbox data
+  hosts: localhost
+  gather_facts: false
+  roles:
+    - role: create_tf_with_netbox_data

@@ -1,0 +1,24 @@
+locals {
+  pve_vms = [
+{% for data in netbox_data %}
+{% if data.value.primary_ip.address | ansible.utils.ipaddr("network") == "172.16.0.0" %}
+{% set gw = "172.16.0.254" %}
+{% elif data.value.primary_ip.address | ansible.utils.ipaddr("network") == "172.16.10.0" %}
+{% set gw = "172.16.10.1" %}
+{% elif data.value.primary_ip.address | ansible.utils.ipaddr("network") == "172.16.20.0" %}
+{% set gw = "172.16.20.102" %}
+{% endif %}
+    {
+      name        = "{{ data.value.name | default()  }}"
+      nameserver  = "172.16.0.53"
+      cores       = "{{ data.value.vcpus | default() }}"
+      memory      = "{{ data.value.memory | default()  }}"
+      clone       = "{{ data.value.platform.name | default() }}"
+      ipconfig0   = "ip={{ data.value.primary_ip.address | default()  }},gw={{ gw }}"
+      disk = {
+        size    = "{{ data.value.disk | default() }}M"
+      }
+    },
+{% endfor %}
+  ]
+}
