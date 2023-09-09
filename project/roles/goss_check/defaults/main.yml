@@ -3,3 +3,4 @@ goss_dir: /usr/local/share/goss
 # discord_post_room: "1051453383602610206"  # debug
 discord_post_room: "1101883600309334156"  # ネバネバンド開発部
 discord_token: ""  # extra_varsで指定してね
+post_url_to_discord: "https://ichijin-plus.com/comics/2408795783205"

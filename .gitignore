@@ -1,5 +1,13 @@
+# python
 *venv
-artifacts/*
 env/
+
+# test
 .yamllint
-goss_reports/
+
+# Ansible runner
+artifacts/*
+
+# output_files
+project/output_files/*
+!project/output_files/README.md

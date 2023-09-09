@@ -3,7 +3,7 @@
 # See https://pre-commit.com/hooks.html for more hooks
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v3.4.0
+    rev: v4.4.0
     hooks:
       - id: check-case-conflict
       - id: check-merge-conflict
@@ -11,22 +11,16 @@ repos:
       - id: end-of-file-fixer
       - id: mixed-line-ending
   - repo: https://github.com/ansible/ansible-lint.git
-    rev: v6.17.2
+    rev: v6.18.0
     hooks:
       - id: ansible-lint
         name: Ansible-lint
         description: This hook runs ansible-lint.
         entry: ansible-lint
         language: python
-        # do not pass files to ansible-lint, see:
-        # https://github.com/ansible/ansible-lint/issues/611
         pass_filenames: true  # 処理時間長いので変更のあったファイルだけ対象にする
         always_run: false  # 処理時間長いので変更のあったファイルだけ対象にする
         additional_dependencies:
-          # https://github.com/pre-commit/pre-commit/issues/1526
-          # If you want to use specific version of ansible-core or ansible, feel
-          # free to override `additional_dependencies` in your own hook config
-          # file.
           - ansible-core>=2.13.3
   - repo: https://github.com/adrienverge/yamllint.git
     rev: v1.32.0

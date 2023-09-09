@@ -1,0 +1,47 @@
+---
+default:
+  image: python:3.11
+  before_script:
+    - pip install -r requirements.txt
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo $SSH_PRIVATE_KEY | base64 -d > ~/.ssh/neverneba.key
+    - chmod 600 ~/.ssh/neverneba.key
+    - ansible-galaxy collection install -r requirements.yml
+    - ls -la
+    - pwd
+
+variables:
+  ANSIBLE_HOST_KEY_CHECKING=False: "false"
+
+stages:
+  - playbook
+  - test
+
+goss:
+  stage: playbook
+  variables:
+    POST_URL_TO_DISCORD: $CI_JOB_URL
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+  script:
+    - "ansible-playbook project/goss.yml \
+      -i inventory \
+      --vault-password-file $VAULT_PASS \
+      --extra-vars post_url_to_discord=$CI_JOB_URL
+      "
+  artifacts:
+    paths:
+      - project/output_files/goss_reports/
+    untracked: false
+    when: always
+    expire_in: "30 days"
+
+ansible-lint:
+  stage: test
+  script: ansible-lint project
+
+yamllint:
+  stage: test
+  script: yamllint project/

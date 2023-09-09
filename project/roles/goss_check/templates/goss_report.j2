@@ -5,15 +5,15 @@
 |resource-id                |resource-type               |successful                |summary-line                |
 |---------------------------|----------------------------|--------------------------|----------------------------|
 {% for result in data.results %}
-|{{ result["resource-id"] }}|{{ result["resource-type"]}}|{{ result["successful"] }}|{{ result["summary-line"] }}|
+|{{ result["resource-id"] }}|{{ result["resource-type"]}}|{{ result["successful"] }}|```{{ result["summary-line"] | replace("\n", " ") }}```|
 {% endfor %}
 
 |Count              |Failed           |Skipped                |Duration               |
 |---------------------------|----------------------------|--------------------------|----------------------------|
-|{{ data.summary["test-count"] }}|{{ data.summary["failed-count"] }}|{{ data.summary["skipped-count"] }}|{{ '%0.3f' | format(data.summary["total-duration"] / 1000000000) }}s
+|{{ data.summary["test-count"] }}|{{ data.summary["failed-count"] }}|{{ data.summary["skipped-count"] }}|{{ '%0.3f' | format(data.summary["total-duration"] / 1000000000) }}
 
 {% if data.summary["failed-count"] %}
-# *Server Check Failed 😢*
+# *Server Check Failed* 😢
 {% else %}
-# *Server Check Success!!!! 🎉*
+# *Server Check Success!!!!* 🎉
 {% endif %}

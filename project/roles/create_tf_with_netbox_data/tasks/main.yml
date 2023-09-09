@@ -1,3 +1,4 @@
+---
 # Configurations
 - name: Create TF with netbox data
   ansible.builtin.template:
@@ -5,6 +6,4 @@
     dest: ~/netbox.tf
     mode: "0644"
   vars:
-    netbox_data: "{{ query('netbox.netbox.nb_lookup',
-                        'virtual-machines',
-                        ) }}"
+    netbox_data: "{{ query('netbox.netbox.nb_lookup', 'virtual-machines') }}"
