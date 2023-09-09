@@ -1,7 +1,7 @@
 ---
 - name: Goss Test
   hosts: is_virtual
-  gather_facts: false
+  gather_facts: true
   roles:
     - role: goss_check
       tags: goss

@@ -17,9 +17,7 @@
 {% if target_service_tag.slug == host_tag %}
   - {{
     query('netbox.netbox.nb_lookup', 'ip-addresses',
-    api_filter='id=' + ( address.id | string ),
-    api_endpoint=netbox_url,
-    token=netbox_token)[0].dns_name
+    api_filter='id=' + ( address.id | string ))[0].dns_name
     }}:{{ nb_item.value.ports[0] }}
 {% endif %}
 {%- endfor -%}

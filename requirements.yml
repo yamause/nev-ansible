@@ -1,0 +1,25 @@
+---
+collections:
+  - name: ansible.netcommon
+    version: "5.1.2"
+    source: https://galaxy.ansible.com
+
+  - name: ansible.posix
+    version: "1.5.4"
+    source: https://galaxy.ansible.com
+
+  - name: ansible.utils
+    version: "2.10.3"
+    source: https://galaxy.ansible.com
+
+  - name: community.crypto
+    version: "2.15.0"
+    source: https://galaxy.ansible.com
+
+  - name: community.general
+    version: "7.3.0"
+    source: https://galaxy.ansible.com
+
+  - name: netbox.netbox
+    version: "3.13.0"
+    source: https://galaxy.ansible.com

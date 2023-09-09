@@ -22,57 +22,12 @@
 
 - name: Test Goss
   ansible.builtin.command:
-    cmd: "goss --gossfile {{ goss_dir }}/goss_main.yml validate"
+    cmd: "goss --gossfile {{ goss_dir }}/goss_main.yml validate --format json"
   register: goss_result
   ignore_errors: true
   become: true
   changed_when: goss_result.rc != 0
 
-# - name: Create directory for reports
-#   ansible.builtin.file:
-#     path: "goss_reports/server_reports/"
-#     state: directory
-#     mode: "0755"
-#   delegate_to: localhost
-
-# - name: Create goss report
-#   ansible.builtin.template:
-#     src: goss_report.j2
-#     dest: "goss_reports/server_reports/{{ ansible_host }}_report.md"
-#     mode: "0644"
-#   delegate_to: localhost
-#   vars:
-#     data: "{{ goss_result.stdout | from_json }}"
-
-# - name: Assenble goss reports
-#   ansible.builtin.assemble:
-#     src: goss_reports/server_reports/
-#     dest: goss_reports/report.md
-#     mode: "0644"
-#   delegate_to: localhost
-#   run_once: true
-
-- name: Post result to Discord
-  ansible.builtin.uri:
-    url: "https://discordapp.com/api/channels/{{ discord_post_room }}/messages"
-    method: POST
-    body_format: json
-    status_code: [200, 202]
-    return_content: true
-    headers:
-      Content-Type: application/json
-      Authorization: "Bot {{ discord_token }}"
-    body:
-      content: にゃ〜ん！？ テストが失敗したにゃ〜ん(T_T)
-      embeds:
-        - title: "{{ ansible_host }}"
-          description: |-
-            {% for i in goss_result.stdout_lines %}
-            {{ i }}
-            {% endfor %}
-          url: https://ichijin-plus.com/comics/2408795783205
-          color: 15817563
-          timestamp: "{{ goss_result.end }}"
-          image:
-            url: https://i.imgur.com/0kPE4vt.jpg
-  when: goss_result.rc != 0
+- name: Incloude output_report
+  ansible.builtin.include_tasks:
+    file: output_report.yml
