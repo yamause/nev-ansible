@@ -2,14 +2,12 @@
 default:
   image: python:3.11
   before_script:
-    - pip install -r requirements.txt
+    - bash install.sh
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - echo $SSH_PRIVATE_KEY | base64 -d > ~/.ssh/neverneba.key
     - chmod 600 ~/.ssh/neverneba.key
-    - ansible-galaxy collection install -r requirements.yml
     - ls -la
-    - pwd
 
 variables:
   ANSIBLE_HOST_KEY_CHECKING=False: "false"

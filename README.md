@@ -10,7 +10,7 @@
 git clone git@nev-yo-sv-gitlab-01.asaasahi.com:neverneband/nev-ansible.git
 python -m venv .venv --upgrade-deps
 source .venv/activate
-pip install -r requirements.txt
+bash install.sh
 ```
 
 ## 変数設定
