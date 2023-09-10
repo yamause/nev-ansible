@@ -3,7 +3,7 @@
 - name: Create TF with netbox data
   ansible.builtin.template:
     src: netbox.tf.j2
-    dest: ~/netbox.tf
+    dest: output_files/netbox.tf
     mode: "0644"
   vars:
     netbox_data: "{{ query('netbox.netbox.nb_lookup', 'virtual-machines') }}"

@@ -30,6 +30,7 @@ platformdirs==3.10.0
 pre-commit==3.4.0
 pycparser==2.21
 Pygments==2.16.1
+pynetbox==7.2.0
 pytz==2023.3.post1
 PyYAML==6.0.1
 referencing==0.30.2
