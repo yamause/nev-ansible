@@ -9,6 +9,7 @@ locals {
 {% set gw = "172.16.20.102" %}
 {% endif %}
     {
+      vmid        = "{{ data.value.id + 1000 | default() }}"
       name        = "{{ data.value.name | default()  }}"
       nameserver  = "172.16.0.53"
       cores       = "{{ data.value.vcpus | default() }}"
@@ -17,6 +18,7 @@ locals {
       ipconfig0   = "ip={{ data.value.primary_ip.address | default()  }},gw={{ gw }}"
       disk = {
         size    = "{{ data.value.disk | default() }}M"
+        storage = "{{ data.value.custom_fields.installation_storage | default() }}"
       }
     },
 {% endfor %}
