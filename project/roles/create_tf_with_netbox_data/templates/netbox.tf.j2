@@ -1,6 +1,8 @@
 locals {
-  pve_vms = [
-{% for data in netbox_data %}
+{% for site in vm_on_sites %}
+  {% for i in site.keys() %}{{ i }}{% endfor %} = [
+{% for before_removing_array_data in site.values() %}
+{% for data in before_removing_array_data %}
 {% if data.value.primary_ip.address | ansible.utils.ipaddr("network") == "172.16.0.0" %}
 {% set gw = "172.16.0.254" %}
 {% elif data.value.primary_ip.address | ansible.utils.ipaddr("network") == "172.16.10.0" %}
@@ -22,5 +24,7 @@ locals {
       }
     },
 {% endfor %}
+{% endfor %}
   ]
+{% endfor %}
 }
