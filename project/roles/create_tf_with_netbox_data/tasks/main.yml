@@ -1,9 +1,19 @@
 ---
-# Configurations
+- name: Initialize list vars
+  ansible.builtin.set_fact:
+    vm_on_sites: []
+
+- name: Set VM facts
+  ansible.builtin.set_fact:
+    vm_on_sites:
+      "{{ vm_on_sites + [{item.value.name | replace('-', '_'): query(
+        'netbox.netbox.nb_lookup',
+        'virtual-machines',
+        api_filter='site=' +item.value.name )}] }}"
+  loop: "{{ query('netbox.netbox.nb_lookup', 'sites') }}"
+
 - name: Create TF with netbox data
   ansible.builtin.template:
     src: netbox.tf.j2
     dest: output_files/netbox.tf
     mode: "0644"
-  vars:
-    netbox_data: "{{ query('netbox.netbox.nb_lookup', 'virtual-machines') }}"
