@@ -3,6 +3,8 @@ plugin: netbox.netbox.nb_inventory
 use_extra_vars: true
 ansible_host_dns_name: true
 cache: true
+query_filters:
+  - status: active
 group_by:
   - platforms
   - services
