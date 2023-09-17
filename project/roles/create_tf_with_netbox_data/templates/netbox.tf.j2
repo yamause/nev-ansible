@@ -1,30 +1,48 @@
+
 locals {
-{% for site in vm_on_sites %}
-  {% for i in site.keys() %}{{ i }}{% endfor %} = [
-{% for before_removing_array_data in site.values() %}
-{% for data in before_removing_array_data %}
-{% if data.value.primary_ip.address | ansible.utils.ipaddr("network") == "172.16.0.0" %}
+{# Site情報の取得 繰り返し #}
+{% for site in query('netbox.netbox.nb_lookup', 'sites') %}
+  {{ site.value.name | replace('-', '_') }} = [
+{% set vmdatas=query(
+  'netbox.netbox.nb_lookup',
+  'virtual-machines',
+  api_filter='tag=terraform site=' + site.value.name ) %}
+{# vmの登録情報を取得する繰り返し 繰り返し #}
+{% for vmdata in vmdatas %}
+{% set clusters=query(
+  'netbox.netbox.nb_lookup',
+  'clusters',
+  api_filter='name='+vmdata.value.cluster.name) %}
+{# Clusgter Type が proxmox-ve であるものだけを対象にする #}
+{% for cluster in clusters %}
+{% if cluster.value.type.slug  == 'proxmox-ve' %}
+{# GWの選択 ※将来的にnetboxから値を取得してくるように仕様を変更します #}
+{% if vmdata.value.primary_ip.address | default() | ansible.utils.ipaddr("network") == "172.16.0.0" %}
 {% set gw = "172.16.0.254" %}
-{% elif data.value.primary_ip.address | ansible.utils.ipaddr("network") == "172.16.10.0" %}
+{% elif vmdata.value.primary_ip.address | default() | ansible.utils.ipaddr("network") == "172.16.10.0" %}
 {% set gw = "172.16.10.1" %}
-{% elif data.value.primary_ip.address | ansible.utils.ipaddr("network") == "172.16.20.0" %}
+{% elif vmdata.value.primary_ip.address | default() | ansible.utils.ipaddr("network") == "172.16.20.0" %}
 {% set gw = "172.16.20.102" %}
 {% endif %}
-    {
-      vmid        = "{{ data.value.id + 1000 | default() }}"
-      name        = "{{ data.value.name | default()  }}"
+  {
+      vmid        = "{{ vmdata.value.id + 1000 | default() }}"
+      name        = "{{ vmdata.value.name | default() }}"
       nameserver  = "172.16.0.53"
-      cores       = "{{ data.value.vcpus | default() }}"
-      memory      = "{{ data.value.memory | default()  }}"
-      clone       = "{{ data.value.platform.name | default() }}"
-      ipconfig0   = "ip={{ data.value.primary_ip.address | default()  }},gw={{ gw }}"
+      cores       = "{{ vmdata.value.vcpus | default() }}"
+      memory      = "{{ vmdata.value.memory | default() }}"
+      clone       = "{{ vmdata.value.platform.name | default() }}"
+      ipconfig0   = "ip={{ vmdata.value.primary_ip.address | default('') }}, gw={{ gw | default('') }}"
       disk = {
-        size    = "{{ data.value.disk | default() }}M"
-        storage = "{{ data.value.custom_fields.installation_storage | default() }}"
-      }
+        size    = "{{ vmdata.value.disk | default() }}M"
+        storage = "{{ vmdata.value.custom_fields.installation_storage | default() }}"
+        }
     },
+{% endif %}
+{# vmの登録情報を取得する繰り返し 繰り返しの終了 #}
 {% endfor %}
+{# Clusgter Type が proxmox-ve であるものだけを対象にする 繰り返しの終了 #}
 {% endfor %}
   ]
+{# Site情報の取得 繰り返しの終了 #}
 {% endfor %}
 }
