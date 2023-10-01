@@ -8,3 +8,7 @@ host_key_checking: "{{ vault_host_key_checking }}"
 # DiscordBot
 discord_post_room: "{{ vault_discord_post_room }}"  # ネバネバンド開発部
 discord_token: "{{ vault_discord_token }}"
+
+# Goss
+goss_base_dir: /usr/local/share/goss
+goss_sub_dir: "{{ goss_base_dir }}/ansible_auto_create"

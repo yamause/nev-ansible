@@ -1,0 +1,27 @@
+---
+- name: Install goss
+  tags:
+    - install
+    - install_goss
+    - goss
+  block:
+    - name: Copy binary file for goss
+      ansible.builtin.copy:
+        src: goss
+        dest: "{{ goss_bin_dir }}"
+        mode: "0755"
+      become: true
+
+    - name: Create base directory for goss
+      ansible.builtin.file:
+        path: "{{ goss_base_dir }}"
+        state: directory
+        mode: "0755"
+      become: true
+
+    - name: Copy main gossfile
+      ansible.builtin.copy:
+        src: goss_main.yml
+        dest: "{{ goss_base_dir }}/goss_main.yml"
+        mode: "0755"
+      become: true

@@ -1,0 +1,42 @@
+---
+install_prometheus_bin_version:
+  "{% for service in services %}\
+  {% if service.name | regex_findall('prometheus.*') %}\
+  {{ service.custom_fields.version }}\
+  {% endif %}\
+  {% endfor %}"
+install_prometheus_bin_dist: linux-amd64
+install_prometheus_bin_file:
+  "prometheus-{{ install_prometheus_bin_version }}.\
+  {{ install_prometheus_bin_dist }}"
+install_prometheus_bin_dl_url:
+  https://github.com/prometheus/prometheus/releases/download
+install_prometheus_bin_dl_file:
+  "{{ install_prometheus_bin_dl_url }}\
+  /v{{ install_prometheus_bin_version }}\
+  /{{ install_prometheus_bin_file }}.tar.gz"
+install_prometheus_install_path: /usr/local/bin
+install_prometheus_config_path: /etc/prometheus
+install_prometheus_sd_file_path:
+  "{{ install_prometheus_config_path }}/sd_files"
+
+# list
+install_prometheus_listen_ports:
+  "{% for service in services %}\
+  {% if service.name | regex_findall('prometheus.*') %}\
+  {{ service.ports }}\
+  {% endif %}\
+  {% endfor %}
+  "
+
+# list
+install_prometheus_listen_addresses:
+  "{% for service in services %}\
+  {% if service.name | regex_findall('prometheus.*') %}\
+  {{ service.ipaddresses | \
+  map(attribute='address', default='0.0.0.0') | \
+  map('ansible.utils.ipaddr', 'address') }}\
+  {% endif %}\
+  {% endfor %}
+  "
+install_prometheus_dbdata_path: /var/prometheus/data

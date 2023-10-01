@@ -1,0 +1,12 @@
+---
+- name: Install node-exporter
+  hosts: service_node-exporter*
+  gather_facts: false
+  roles:
+    - role: install_node-exporter
+
+- name: Configuer Prometheus file service discovery
+  hosts: service_prometheus*
+  gather_facts: false
+  roles:
+    - role: periodic_prometheus_filesd

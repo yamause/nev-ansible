@@ -1,0 +1,20 @@
+---
+- name: Configure goss
+  tags:
+    - configure
+    - configure_goss
+    - goss
+  block:
+    - name: Create sub directory for goss
+      ansible.builtin.file:
+        path: "{{ goss_sub_dir }}"
+        state: directory
+        mode: "0755"
+      become: true
+
+    - name: Create sub gossfile
+      ansible.builtin.template:
+        src: "{{ goss_template_file }}"
+        dest: "{{ goss_sub_dir }}/{{ goss_file_name }}"
+        mode: "0644"
+      become: true

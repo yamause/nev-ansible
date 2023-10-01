@@ -1,0 +1,24 @@
+---
+- name: Incloude install tasks
+  ansible.builtin.include_tasks:
+    file: install.yml
+  tags:
+    - install
+    - install_goss
+    - goss
+
+- name: Incloude configure tasks
+  ansible.builtin.include_tasks:
+    file: configure.yml
+  tags:
+    - configure
+    - configure_goss
+    - goss
+
+- name: Incloude uninstall tasks
+  ansible.builtin.include_tasks:
+    file: uninstall.yml
+  tags:
+    - uninstall
+    - uninstall_goss
+    - never

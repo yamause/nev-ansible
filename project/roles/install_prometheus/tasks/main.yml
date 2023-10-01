@@ -1,0 +1,18 @@
+---
+- name: Incloude install tasks
+  ansible.builtin.include_tasks:
+    file: install.yml
+  tags:
+    - install
+    - install_prometheus
+    - prometheus
+
+- name: Incloude configure tasks
+  ansible.builtin.include_tasks:
+    file: configure.yml
+  tags:
+    - configure
+    - configure_prometheus
+    - prometheus
+    - configure_goss
+    - goss

@@ -1,0 +1,53 @@
+---
+##### SAMPLE #####
+# install_node-exporter_bin_version: "1.6.1"
+# install_node_exporter_bin_dist: linux-amd64
+# install_node_exporter_bin_file: install_node_exporter-1.6.1.linux-amd64
+# install_node_exporter_listen_ports: [9100]
+# install_node_exporter_listen_addresses: [172.16.10.57]
+# install_node_exporter_bin_dl_url:
+#   https://github.com/prometheus/install_node_exporter/releases/download
+# install_node_exporter_bin_dl_file:
+#   https://github.com/prometheus/install_node_exporter\
+#   /releases/download/v1.6.1/install_node_exporter-1.6.1.linux-amd64.tar.gz
+
+install_node_exporter_bin_version:
+  "{% for service in services %}\
+  {% if service.name | regex_findall('node-exporter.*') %}\
+  {{ service.custom_fields.version }}\
+  {% endif %}\
+  {% endfor %}"
+install_node_exporter_bin_dist: linux-amd64
+install_node_exporter_bin_file:
+  "node_exporter-{{ install_node_exporter_bin_version }}.\
+  {{ install_node_exporter_bin_dist }}"
+install_node_exporter_bin_dl_url:
+  https://github.com/prometheus/node_exporter/releases/download
+install_node_exporter_bin_dl_file:
+  "{{ install_node_exporter_bin_dl_url }}\
+  /v{{ install_node_exporter_bin_version }}\
+  /{{ install_node_exporter_bin_file }}.tar.gz"
+install_node_exporter_install_path: /usr/local/bin
+
+# list
+install_node_exporter_listen_ports:
+  "{% for service in services %}\
+  {% if service.name | regex_findall('node-exporter.*') %}\
+  {{ service.ports }}\
+  {% endif %}\
+  {% endfor %}"
+
+# list
+install_node_exporter_listen_addresses:
+  "{% for service in services %}\
+  {% if service.name | regex_findall('node-exporter.*') %}\
+  {{ service.ipaddresses | \
+  map(attribute='address', default='0.0.0.0') | \
+  map('ansible.utils.ipaddr', 'address') | list }}\
+  {% endif %}\
+  {% endfor %}"
+
+# Use in goss_add_file role
+goss_sub_dir: /usr/local/share/goss/ansible_auto_create
+goss_file_name: node-exporter.yml
+goss_template_file: node-exporter_gossfile.j2

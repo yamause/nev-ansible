@@ -1,0 +1,7 @@
+---
+goss_bin_dir: /usr/local/bin/goss  # noqa var-naming[no-role-prefix]
+goss_base_dir: /usr/local/share/goss  # noqa var-naming[no-role-prefix]
+goss_sub_dir:  # noqa var-naming[no-role-prefix]
+  "{{ goss_base_dir }}/ansible_auto_create"
+goss_file_name: goss_demo.yml  # noqa var-naming[no-role-prefix]
+goss_template_file: gossfile.j2  # noqa var-naming[no-role-prefix]

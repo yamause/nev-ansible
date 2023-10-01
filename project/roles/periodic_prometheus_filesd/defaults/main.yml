@@ -1,0 +1,4 @@
+---
+periodic_prometheus_filesd_config_path: /etc/prometheus
+periodic_prometheus_filesd_sd_file_path:
+  "{{ periodic_prometheus_filesd_config_path }}/sd_files"

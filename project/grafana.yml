@@ -1,6 +1,0 @@
----
-- name: Install Grafana
-  hosts: service_grafana-server
-  roles:
-    - role: grafana_setup
-      tags: grafana

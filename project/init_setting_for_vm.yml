@@ -1,0 +1,12 @@
+---
+- name: Init Setting for VM
+  hosts: is_virtual
+  gather_facts: false
+  roles:
+    - role: install_sssd_for_ldap
+
+- name: Install node-exporter
+  hosts: service_node-exporter*
+  gather_facts: false
+  roles:
+    - role: install_node-exporter

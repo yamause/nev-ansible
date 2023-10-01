@@ -1,0 +1,7 @@
+---
+goss_base_dir: /usr/local/share/goss  # noqa var-naming[no-role-prefix]
+# discord_post_room: "1051453383602610206"  # debug
+discord_post_room: "1151713071895674970"  # noqa var-naming[no-role-prefix]
+discord_token: ""  # noqa var-naming[no-role-prefix]
+post_url_to_discord:  # noqa var-naming[no-role-prefix]
+  "https://ichijin-plus.com/comics/2408795783205"

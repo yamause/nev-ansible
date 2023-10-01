@@ -1,0 +1,14 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: Install sudo
+      ansible.builtin.apt:
+        name:
+          - sudo
+        update_cache: true
+        state: present
+
+    - name: Include install_goss
+      ansible.builtin.include_role:
+        name: "install_goss"
