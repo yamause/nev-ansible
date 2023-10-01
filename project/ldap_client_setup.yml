@@ -1,7 +1,0 @@
----
-- name: Nev_sv_startup
-  # hosts: sites_ke:&is_virtual
-  hosts: is_virtual
-  roles:
-    - role: sssd_ldap
-      tags: sssd

@@ -1,0 +1,35 @@
+---
+- name: Converge
+  hosts: all
+  vars:
+    install_prometheus_bin_version: "2.45.0"
+    install_prometheus_bin_file: prometheus-2.45.0.linux-amd64
+    install_prometheus_bin_dl_url:
+      https://github.com/prometheus/prometheus/releases/download
+    install_prometheus_bin_dl_file:
+      "{{ install_prometheus_bin_dl_url }}\
+      /v{{ install_prometheus_bin_version }}\
+      /{{ install_prometheus_bin_file }}.tar.gz"
+    install_prometheus_install_path: /usr/local/bin
+    install_prometheus_config_path: /etc/prometheus
+    install_prometheus_sd_file_path: /etc/prometheus/sd_files
+    install_prometheus_listen_ports: [9090]
+    install_prometheus_listen_addresses: [0.0.0.0]
+    install_prometheus_dbdata_path: /var/prometheus/data
+    # Use in goss_add_file role
+    goss_sub_dir: /usr/local/share/goss/ansible_auto_create
+    goss_file_name: prometheus.yml
+    goss_template_file: prometheus_gossfile.j2
+
+  tasks:
+    - name: "Install systemctl and sudo"
+      ansible.builtin.apt:
+        name:
+          - systemctl
+          - sudo
+        update_cache: true
+        state: present
+
+    - name: "Include install prometheus"
+      ansible.builtin.include_role:
+        name: "install_prometheus"

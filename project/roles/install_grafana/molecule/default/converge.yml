@@ -1,0 +1,22 @@
+---
+- name: Converge
+  hosts: all
+  vars:
+    install_grafana_version: "10.0.3"
+    install_grafana_listen_port: [3000]
+    install_grafana_listen_address: [127.0.0.1]
+    goss_sub_dir: /usr/local/share/goss/ansible_auto_create
+    goss_file_name: "grafana.yml"
+    goss_template_file: grafana_gossfile.j2
+  tasks:
+    - name: "Install systemctl and sudo"
+      ansible.builtin.apt:
+        name:
+          - systemctl
+          - sudo
+        update_cache: true
+        state: present
+
+    - name: "Include grafana_setup"
+      ansible.builtin.include_role:
+        name: "install_grafana"

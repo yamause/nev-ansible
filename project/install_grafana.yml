@@ -1,0 +1,6 @@
+---
+- name: Install Grafana
+  hosts: service_grafana-server
+  gather_facts: false
+  roles:
+    - role: install_grafana

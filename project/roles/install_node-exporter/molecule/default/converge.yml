@@ -1,0 +1,31 @@
+---
+- name: Converge
+  hosts: all
+  vars:
+    install_node_exporter_bin_version: "1.6.1"
+    install_node_exporter_bin_dist: linux-amd64
+    install_node_exporter_bin_file: node_exporter-1.6.1.linux-amd64
+    install_node_exporter_listen_ports: [9100]
+    install_node_exporter_listen_addresses: [0.0.0.0]
+    install_node_exporter_bin_dl_url:
+      https://github.com/prometheus/node_exporter/releases/download
+    install_node_exporter_bin_dl_file:
+      "https://github.com/prometheus/node_exporter\
+      /releases/download/v1.6.1/node_exporter-1.6.1.linux-amd64.tar.gz"
+    # Use in goss_add_file role
+    goss_sub_dir: /usr/local/share/goss/ansible_auto_create
+    goss_file_name: node-exporter.yml
+    goss_template_file: node-exporter_gossfile.j2
+
+  tasks:
+    - name: "Install systemctl and sudo"
+      ansible.builtin.apt:
+        name:
+          - systemctl
+          - sudo
+        update_cache: true
+        state: present
+
+    - name: "Include install_node-exporter"
+      ansible.builtin.include_role:
+        name: "install_node-exporter"

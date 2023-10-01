@@ -1,0 +1,13 @@
+---
+- name: Verify Prometheus file service discovery
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Get sd_file path
+      ansible.builtin.stat:
+        path: "{{ PROMETHEUS_SD_FILE_PATH }}/sd_file.yml"
+      register: sd_file_path
+
+    - name: Exists sd_file
+      ansible.builtin.assert:
+        that: sd_file_path == {{ PROMETHEUS_SD_FILE_PATH }}/sd_file.yml

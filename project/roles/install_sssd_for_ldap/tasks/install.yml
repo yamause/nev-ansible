@@ -1,0 +1,16 @@
+---
+- name: Install sssd
+  tags:
+    - install
+    - install_sssd
+    - sssd
+  block:
+    - name: Install SSSD and LDAP-uttils
+      ansible.builtin.apt:
+        name:
+          - sssd
+          - sssd-tools
+          - ldap-utils
+        update_cache: true
+        state: present
+      become: true

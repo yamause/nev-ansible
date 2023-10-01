@@ -1,0 +1,7 @@
+---
+- name: Install Prometheus
+  hosts: service_prometheus
+  gather_facts: false
+  roles:
+    - role: install_prometheus
+    - role: periodic_prometheus_filesd

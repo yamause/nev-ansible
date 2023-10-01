@@ -1,0 +1,8 @@
+---
+# Use in goss_add_file role
+goss_sub_dir:  # noqa var-naming[no-role-prefix]
+  /usr/local/share/goss/ansible_auto_create
+goss_file_name:  # noqa var-naming[no-role-prefix]
+  "prometheus_filesd.yml"
+goss_template_file:  # noqa var-naming[no-role-prefix]
+  prometheus_gossfile.j2

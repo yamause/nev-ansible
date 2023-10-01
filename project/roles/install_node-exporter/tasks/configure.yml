@@ -1,0 +1,12 @@
+---
+- name: Configure node-exporter
+  tags:
+    - configure
+    - configure_node-exporter
+    - node-exporter
+    - configure_goss
+    - goss
+  block:
+    - name: Include Goss add file role
+      ansible.builtin.include_role:
+        name: install_goss

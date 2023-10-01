@@ -1,0 +1,91 @@
+---
+- name: Report for goss
+  tags:
+    - goss
+    - periodic_goss
+    - periodic
+  block:
+    - name: Create directory for reports markdown
+      ansible.builtin.file:
+        path: "output_files/goss_reports/server_reports_md/"
+        state: directory
+        mode: "0755"
+      delegate_to: localhost
+
+    - name: Create directory for reports markdjsonown
+      ansible.builtin.file:
+        path: "output_files/goss_reports/server_reports_json/"
+        state: directory
+        mode: "0755"
+      delegate_to: localhost
+
+    - name: Create goss report markdown
+      ansible.builtin.template:
+        src: goss_report.j2
+        dest:
+          "output_files/goss_reports/server_reports_md/{{ ansible_host }}.md"
+        mode: "0644"
+      delegate_to: localhost
+      vars:
+        data: "{{ goss_result.stdout | from_json }}"
+
+    - name: Create goss report json
+      ansible.builtin.copy:
+        content: "{{ goss_result.stdout | from_json | to_nice_json }}"
+        dest:
+          "output_files/goss_reports/server_reports_json/\
+          {{ ansible_host }}.json"
+        mode: "0644"
+      delegate_to: localhost
+
+    - name: Assenble goss reports
+      ansible.builtin.assemble:
+        src: output_files/goss_reports/server_reports_md/
+        dest: output_files/goss_reports/report.md
+        mode: "0644"
+      delegate_to: localhost
+      run_once: true
+
+    - name: Get JSON report names
+      ansible.builtin.find:
+        paths: output_files/goss_reports/server_reports_json/
+        recurse: true
+      register: json_reports
+      delegate_to: localhost
+      run_once: true
+
+    - name: Post result to Discord
+      ansible.builtin.uri:
+        url:
+          "https://discordapp.com/api/channels/\
+          {{ DISCORD_POST_ROOM }}/messages"
+        method: POST
+        body_format: json
+        status_code: [200, 202]
+        return_content: true
+        headers:
+          Content-Type: application/json
+          Authorization: "Bot {{ DISCORD_TOKEN }}"
+        body:
+          content: テストがおわったよ！
+          embeds:
+            - title: レポートはここですよー
+              description:
+                "{% for i in json_reports.files %}
+                {% set report_data = lookup('file', i.path) | from_json %}
+                {% if report_data.summary.get('failed-count') %}
+                :x: {{ i.path | basename | replace('.json', '') }} is failed
+
+                {% else %}
+                :o: {{ i.path | basename | replace('.json', '') }} is OK
+
+                {% endif %}
+                {% endfor %}
+                "
+              url: "{{ POST_URL_TO_DISCORD }}"
+              color: 15817563
+              timestamp: "{{ ansible_date_time.iso8601 }}"
+              image:
+                url: https://i.imgur.com/0kPE4vt.jpg
+      run_once: true
+      delegate_to: localhost

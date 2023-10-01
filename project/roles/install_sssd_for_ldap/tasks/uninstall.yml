@@ -1,0 +1,42 @@
+---
+- name: Uninstall sssd
+  tags:
+    - uninstall
+    - uninstall_sssd
+    - never
+  block:
+    - name: Stop SSSD deamon
+      ansible.builtin.systemd:
+        name: sssd.service
+        state: stopped
+        enabled: true
+      become: true
+
+    - name: Delete file /etc/sssd/sssd.conf
+      ansible.builtin.file:
+        path: /etc/sssd/sssd.conf
+        state: absent
+      become: true
+
+    - name: Delete file /etc/ssh/sshd_config.d/10-sshd-sssd.conf
+      ansible.builtin.file:
+        path: /etc/ssh/sshd_config.d/10-sshd-sssd.conf
+        state: absent
+      become: true
+      notify:
+        - Restart sshd deamon
+
+    - name: Delete gossfile
+      ansible.builtin.file:
+        path: "{{ GOSS_SUB_DIR }}/{{ GOSS_FILE_NAME }}"
+        state: absent
+      become: true
+
+    - name: PAM add mkhomedir
+      community.general.pamd:
+        name: common-session
+        state: absent
+        type: session
+        control: optional
+        module_path: pam_mkhomedir.so
+      become: true

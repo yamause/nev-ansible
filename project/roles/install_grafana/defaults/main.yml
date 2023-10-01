@@ -1,0 +1,23 @@
+---
+install_grafana_version:
+  "{% for service in services %}\
+  {% if service.name | regex_findall('grafana.*') %}\
+  {{ service.custom_fields.version }}\
+  {% endif %}\
+  {% endfor %}"
+
+install_grafana_listen_port:
+  "{% for service in services %}\
+  {% if service.name | regex_findall('grafana.*') %}\
+  {{ service.ports[0] }}\
+  {% endif %}\
+  {% endfor %}"
+
+install_grafana_listen_address:
+  "{% for service in services %}\
+  {% if service.name | regex_findall('grafana.*') %}\
+  {{ service.ipaddresses[0].address | \
+  default('0.0.0.0') | \
+  ansible.utils.ipaddr('address') }}\
+  {% endif %}\
+  {% endfor %}"

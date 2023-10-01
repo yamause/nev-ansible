@@ -1,0 +1,22 @@
+---
+- name: Test Goss
+  ansible.builtin.command:
+    cmd:
+      "goss --gossfile {{ GOSS_BASE_DIR }}/\
+      goss_main.yml validate --format json"
+  register: goss_result
+  ignore_errors: true
+  become: true
+  changed_when: goss_result.rc != 0
+  tags:
+    - goss
+    - periodic_goss
+    - periodic
+
+- name: Incloude output_report
+  ansible.builtin.include_tasks:
+    file: output_report.yml
+  tags:
+    - goss
+    - periodic_goss
+    - periodic

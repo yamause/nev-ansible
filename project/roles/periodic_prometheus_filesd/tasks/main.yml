@@ -1,0 +1,55 @@
+---
+# User setting
+- name: Create prometheus group
+  ansible.builtin.group:
+    name: prometheus
+    system: true
+    state: present
+  become: true
+
+- name: Create prometheus user
+  ansible.builtin.user:
+    name: prometheus
+    comment: prometheus
+    group: prometheus
+    shell: /sbin/nologin
+    system: true
+    create_home: false
+  become: true
+
+# Directory setting
+- name: Create prometheus config directory
+  ansible.builtin.file:
+    path: "{{ periodic_prometheus_filesd_config_path }}"
+    state: directory
+    mode: "0755"
+    owner: prometheus
+    group: prometheus
+  become: true
+
+- name: Create prometheus sd_file directory
+  ansible.builtin.file:
+    path: "{{ periodic_prometheus_filesd_sd_file_path }}"
+    state: directory
+    mode: "0755"
+    owner: prometheus
+    group: prometheus
+  become: true
+
+# Configurations
+- name: Create file SD for exporter
+  ansible.builtin.template:
+    src: sd_file.yml.j2
+    dest: "{{ periodic_prometheus_filesd_sd_file_path }}/sd_file.yml"
+    mode: "0644"
+    owner: prometheus
+    group: prometheus
+  register: prometheus_sd_file
+  become: true
+  vars:
+    netbox_services: "{{ query('netbox.netbox.nb_lookup',
+                        'services') }}"
+
+- name: Include Goss add file role
+  ansible.builtin.include_role:
+    name: install_goss

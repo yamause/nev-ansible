@@ -1,0 +1,20 @@
+[Unit]
+Description=Node exporter
+
+[Service]
+Type=simple
+Restart=always
+User=prometheus
+ExecStart={{ install_node_exporter_install_path }}/node_exporter \
+{% for port in install_node_exporter_listen_ports %}
+{% for address in install_node_exporter_listen_addresses %}
+--web.listen-address={{ address }}:{{ port }} 
+{% endfor %}
+{% endfor %}
+
+ExecReload=/bin/kill -HUP $MAINPID
+TimeoutStopSec=20s
+SendSIGKILL=no
+
+[Install]
+WantedBy=multi-user.target

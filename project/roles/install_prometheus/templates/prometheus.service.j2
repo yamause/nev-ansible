@@ -1,0 +1,22 @@
+[Unit]
+Description=Prometheus
+
+[Service]
+Type=simple
+Restart=always
+User=prometheus
+ExecStart={{ install_prometheus_install_path }}/prometheus \
+--config.file={{ install_prometheus_config_path }}/prometheus.yml \
+{% for port in install_prometheus_listen_ports %}
+{% for address in install_prometheus_listen_addresses %}
+--web.listen-address={{ address }}:{{ port }} \
+{% endfor %}
+{% endfor %}
+--storage.tsdb.path={{ install_prometheus_dbdata_path }}
+
+ExecReload=/bin/kill -HUP $MAINPID
+TimeoutStopSec=20s
+SendSIGKILL=no
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,19 @@
+---
+- name: Verify goss
+  hosts: all
+  gather_facts: false
+  vars:
+    goss_base_dir: /usr/local/share/goss
+  tasks:
+    - name: Verify goss
+      ansible.builtin.file:
+        path: "{{ goss_base_dir }}/goss_main.yml"
+        state: file
+      register: result
+      become: true
+
+    - name: Result Check
+      ansible.builtin.assert:
+        that:
+          result.path == "{{ goss_base_dir }}/goss_main.yml"
+        success_msg: "Verify Success"
